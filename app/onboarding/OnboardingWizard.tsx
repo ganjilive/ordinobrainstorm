@@ -1,27 +1,39 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useOnboarding, OnboardingState } from '@/lib/useOnboarding';
+import AccountStep from './steps/AccountStep';
+import UsernameStep from './steps/UsernameStep';
+import TeamSizeStep from './steps/TeamSizeStep';
+import ToolsStep from './steps/ToolsStep';
+import GoalStep from './steps/GoalStep';
+import WorkspaceStep from './steps/WorkspaceStep';
+import ProjectStep from './steps/ProjectStep';
+
+const STEPS = [
+  AccountStep,
+  UsernameStep,
+  TeamSizeStep,
+  ToolsStep,
+  GoalStep,
+  WorkspaceStep,
+  ProjectStep,
+];
 
 function renderStep(
   step: number,
   state: OnboardingState,
   onNext: (data?: Partial<OnboardingState>) => void,
 ) {
-  // Step components will be imported and rendered here in Task 6
-  // For now return placeholder
-  return (
-    <div className="text-white text-center py-8">
-      <p className="text-zinc-400 text-sm mb-4">Step {step + 1} of 7</p>
-      <button onClick={() => onNext()} className="text-brand-indigo underline">
-        Continue (placeholder)
-      </button>
-    </div>
-  );
+  const StepComponent = STEPS[step];
+  if (!StepComponent) return null;
+  return <StepComponent state={state} onNext={onNext} />;
 }
 
 export default function OnboardingWizard() {
   const { state, updateState, nextStep } = useOnboarding();
+  const router = useRouter();
 
   const handleNext = useCallback(
     (data?: Partial<OnboardingState>) => {
@@ -30,6 +42,12 @@ export default function OnboardingWizard() {
     },
     [updateState, nextStep],
   );
+
+  useEffect(() => {
+    if (state.step >= 7) {
+      router.replace('/dashboard');
+    }
+  }, [state.step, router]);
 
   return (
     <div className="min-h-screen bg-dark-base flex items-center justify-center p-4">
