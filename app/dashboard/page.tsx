@@ -89,7 +89,7 @@ export default function DashboardPage() {
           style={{ height: 28 }}
         />
         <button
-          onClick={() => { reset(); router.push('/onboarding'); }}
+          onClick={() => { reset(); localStorage.removeItem('ordino_next_steps'); router.push('/onboarding'); }}
           className="text-sm text-zinc-500 hover:text-white transition-colors cursor-pointer"
         >
           ← Restart onboarding
