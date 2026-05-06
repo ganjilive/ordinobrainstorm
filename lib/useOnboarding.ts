@@ -65,6 +65,7 @@ export function useOnboarding() {
 
   const nextStep = useCallback(() => {
     setState((prev) => {
+      if (prev.step >= 7) return prev;
       const next = { ...prev, step: prev.step + 1 };
       writeToStorage(next);
       return next;
