@@ -50,7 +50,7 @@ export default function OnboardingWizard() {
   }, [state.step, router]);
 
   return (
-    <div className="min-h-screen bg-dark-base flex items-center justify-center p-4">
+    <div className="min-h-screen bg-dark-base flex flex-col items-center justify-center p-4">
       <div
         className="w-full max-w-md rounded-xl p-8"
         style={{
@@ -81,6 +81,12 @@ export default function OnboardingWizard() {
           {renderStep(state.step, state, handleNext)}
         </div>
       </div>
+      <button
+        onClick={() => router.push('/dashboard')}
+        className="mt-4 text-xs text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
+      >
+        Skip to dashboard →
+      </button>
     </div>
   );
 }
