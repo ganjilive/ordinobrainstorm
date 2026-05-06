@@ -30,7 +30,7 @@ export default function UsernameStep({ state, onNext }: Props) {
       </p>
 
       <div className="space-y-1.5">
-        <div className="flex items-center bg-dark-surface border border-dark-border rounded-md px-3 py-2">
+        <div className="flex items-center bg-dark-surface border border-dark-border rounded-md px-3 py-2 focus-within:border-brand-indigo focus-within:ring-1 focus-within:ring-brand-indigo">
           <span className="text-zinc-500 mr-1 font-mono">@</span>
           <input
             type="text"

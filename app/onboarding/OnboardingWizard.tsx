@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useOnboarding, OnboardingState } from '@/lib/useOnboarding';
+import { useOnboarding } from '@/lib/useOnboarding';
+import type { OnboardingState } from '@/lib/useOnboarding';
 import AccountStep from './steps/AccountStep';
 import UsernameStep from './steps/UsernameStep';
 import TeamSizeStep from './steps/TeamSizeStep';
@@ -32,15 +33,14 @@ function renderStep(
 }
 
 export default function OnboardingWizard() {
-  const { state, updateState, nextStep } = useOnboarding();
+  const { state, nextStep } = useOnboarding();
   const router = useRouter();
 
   const handleNext = useCallback(
     (data?: Partial<OnboardingState>) => {
-      if (data) updateState(data);
-      nextStep();
+      nextStep(data);
     },
-    [updateState, nextStep],
+    [nextStep],
   );
 
   useEffect(() => {
@@ -56,8 +56,6 @@ export default function OnboardingWizard() {
         style={{
           background: 'rgba(255,255,255,0.024)',
           border: '1px solid rgba(255,255,255,0.071)',
-          borderRadius: '12px',
-          padding: '2rem',
         }}
       >
         {/* Logo */}
@@ -73,7 +71,7 @@ export default function OnboardingWizard() {
         <div className="w-full bg-white/10 rounded-full h-1 mb-8">
           <div
             className="bg-brand-indigo h-1 rounded-full transition-all duration-300"
-            style={{ width: `${(state.step / 7) * 100}%` }}
+            style={{ width: `${(state.step / STEPS.length) * 100}%` }}
           />
         </div>
 

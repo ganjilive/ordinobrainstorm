@@ -30,7 +30,7 @@ export default function TeamSizeStep({ state, onNext }: Props) {
         Help us tailor Ordino AI for your team&apos;s scale.
       </p>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {OPTIONS.map((option) => {
           const isSelected = selected === option;
           return (

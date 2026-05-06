@@ -22,7 +22,7 @@ export default function AccountStep({ state, onNext }: Props) {
   const isValid =
     name.trim().length > 0 &&
     EMAIL_RE.test(email.trim()) &&
-    password.length > 0;
+    password.length >= 8;
 
   function handleSubmit() {
     if (!isValid) return;
@@ -60,6 +60,9 @@ export default function AccountStep({ state, onNext }: Props) {
             onChange={(e) => setEmail(e.target.value)}
             className="bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
           />
+          {email.length > 0 && !EMAIL_RE.test(email.trim()) && (
+            <p className="text-red-400 text-xs mt-1">Please enter a valid email address</p>
+          )}
         </div>
 
         <div className="space-y-1.5">
@@ -83,6 +86,9 @@ export default function AccountStep({ state, onNext }: Props) {
               {showPassword ? 'Hide' : 'Show'}
             </button>
           </div>
+          {password.length > 0 && password.length < 8 && (
+            <p className="text-red-400 text-xs mt-1">Password must be at least 8 characters</p>
+          )}
         </div>
       </div>
 
