@@ -1,6 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+
+@theme {
+  --color-dark-base: #06080f;
+  --color-dark-surface: #080c16;
+  --color-dark-card: rgba(255, 255, 255, 0.024);
+  --color-dark-border: rgba(255, 255, 255, 0.071);
+  --color-brand-orange: #ff6b2b;
+  --color-brand-indigo: #6366f1;
+  --color-brand-cyan: #22d3ee;
+  --color-brand-violet: #a855f7;
+  --font-sans: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -123,6 +137,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: #06080f;
+    color: #ffffff;
   }
   html {
     @apply font-sans;
