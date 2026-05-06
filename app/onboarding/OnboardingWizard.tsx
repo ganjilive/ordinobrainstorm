@@ -76,7 +76,9 @@ export default function OnboardingWizard() {
         </div>
 
         {/* Step content */}
-        {renderStep(state.step, state, handleNext)}
+        <div key={state.step} className="step-enter">
+          {renderStep(state.step, state, handleNext)}
+        </div>
       </div>
     </div>
   );

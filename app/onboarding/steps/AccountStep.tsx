@@ -76,6 +76,7 @@ export default function AccountStep({ state, onNext }: Props) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               className="bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20 pr-16"
             />
             <button
@@ -95,7 +96,7 @@ export default function AccountStep({ state, onNext }: Props) {
       <Button
         onClick={handleSubmit}
         disabled={!isValid}
-        className="w-full mt-6 bg-brand-indigo hover:bg-brand-indigo/90 text-white"
+        className="w-full mt-6 bg-brand-indigo hover:bg-brand-indigo/90 text-white transition-opacity duration-150"
       >
         Continue
       </Button>

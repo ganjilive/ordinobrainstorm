@@ -53,7 +53,7 @@ export default function ProjectStep({ state, onNext }: Props) {
       <Button
         onClick={handleSubmit}
         disabled={!isValid}
-        className="w-full mt-6 bg-brand-indigo hover:bg-brand-indigo/90 text-white"
+        className="w-full mt-6 bg-brand-indigo hover:bg-brand-indigo/90 text-white transition-opacity duration-150"
       >
         Finish setup
       </Button>
