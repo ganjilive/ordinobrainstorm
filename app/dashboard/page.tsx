@@ -19,6 +19,7 @@ export default function DashboardPage() {
           src="https://ordinowebsite.vercel.app/logo-wordmark-light.png"
           alt="Ordino"
           height={32}
+          width={120}
           style={{ height: 32 }}
         />
         <h1 className="text-4xl font-semibold text-white mt-6">

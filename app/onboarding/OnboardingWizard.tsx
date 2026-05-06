@@ -64,6 +64,7 @@ export default function OnboardingWizard() {
           src="https://ordinowebsite.vercel.app/logo-wordmark-light.png"
           alt="Ordino AI"
           height={32}
+          width={120}
           className="mx-auto mb-6"
         />
 

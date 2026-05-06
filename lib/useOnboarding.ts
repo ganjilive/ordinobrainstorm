@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 export type OnboardingState = {
   step: number;        // 0-7; 7 = complete
@@ -47,21 +47,10 @@ function writeToStorage(state: OnboardingState): void {
 }
 
 export function useOnboarding() {
-  const [state, setState] = useState<OnboardingState>(DEFAULT_STATE);
-
-  // Hydrate from localStorage after mount (SSR-safe)
-  useEffect(() => {
-    const persisted = readFromStorage();
-    setState((prev) => ({ ...prev, ...persisted }));
-  }, []);
-
-  const updateState = useCallback((partial: Partial<OnboardingState>) => {
-    setState((prev) => {
-      const next = { ...prev, ...partial };
-      writeToStorage(next);
-      return next;
-    });
-  }, []);
+  const [state, setState] = useState<OnboardingState>(() => ({
+    ...DEFAULT_STATE,
+    ...readFromStorage(),
+  }));
 
   const nextStep = useCallback((partial?: Partial<OnboardingState>) => {
     setState((prev) => {
@@ -79,7 +68,7 @@ export function useOnboarding() {
     setState(DEFAULT_STATE);
   }, []);
 
-  return { state, updateState, nextStep, reset };
+  return { state, nextStep, reset };
 }
 
 /**
