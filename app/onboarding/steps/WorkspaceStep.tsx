@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { OnboardingState } from '@/lib/useOnboarding';
+import { toSlug } from '@/lib/utils';
 
 interface Props {
   state: OnboardingState;
@@ -13,12 +14,29 @@ interface Props {
 
 export default function WorkspaceStep({ state, onNext }: Props) {
   const [workspaceName, setWorkspaceName] = useState(state.workspaceName || '');
+  const [workspaceId, setWorkspaceId] = useState(
+    state.workspaceId || toSlug((state.workspaceName || '') + '-' + (state.username || ''))
+  );
+  const [isIdEdited, setIsIdEdited] = useState(false);
 
-  const isValid = workspaceName.trim().length > 0;
+  const isValidId = /^[a-z0-9][a-z0-9-]*$/.test(workspaceId);
+  const isValid = workspaceName.trim().length > 0 && isValidId;
+
+  function handleNameChange(value: string) {
+    setWorkspaceName(value);
+    if (!isIdEdited) {
+      setWorkspaceId(toSlug(value + '-' + state.username));
+    }
+  }
+
+  function handleIdChange(value: string) {
+    setIsIdEdited(true);
+    setWorkspaceId(value);
+  }
 
   function handleSubmit() {
     if (!isValid) return;
-    onNext({ workspaceName: workspaceName.trim() });
+    onNext({ workspaceName: workspaceName.trim(), workspaceId });
   }
 
   return (
@@ -38,11 +56,32 @@ export default function WorkspaceStep({ state, onNext }: Props) {
           type="text"
           placeholder="e.g. Acme Corp"
           value={workspaceName}
-          onChange={(e) => setWorkspaceName(e.target.value)}
+          onChange={(e) => handleNameChange(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           className="bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
           autoFocus
         />
+      </div>
+
+      <div className="space-y-1.5 mt-4">
+        <Label htmlFor="workspace-id" className="text-zinc-300">
+          Workspace ID
+        </Label>
+        <Input
+          id="workspace-id"
+          type="text"
+          value={workspaceId}
+          onChange={(e) => handleIdChange(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+          className="bg-dark-surface border-dark-border text-white font-mono text-sm placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+        />
+        {isIdEdited && !isValidId ? (
+          <p className="text-xs text-red-400">
+            Only lowercase letters, numbers, and hyphens. Must start with a letter or number.
+          </p>
+        ) : (
+          <p className="text-xs text-zinc-500">Used in URLs and API references</p>
+        )}
       </div>
 
       <Button

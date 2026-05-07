@@ -11,6 +11,7 @@ import ToolsStep from './steps/ToolsStep';
 import GoalStep from './steps/GoalStep';
 import WorkspaceStep from './steps/WorkspaceStep';
 import ProjectStep from './steps/ProjectStep';
+import SummaryStep from './steps/SummaryStep';
 
 const STEPS = [
   AccountStep,
@@ -20,6 +21,7 @@ const STEPS = [
   GoalStep,
   WorkspaceStep,
   ProjectStep,
+  SummaryStep,
 ];
 
 function renderStep(
@@ -44,7 +46,7 @@ export default function OnboardingWizard() {
   );
 
   useEffect(() => {
-    if (state.step >= 7) {
+    if (state.step >= 8) {
       router.replace('/dashboard');
     }
   }, [state.step, router]);
@@ -72,7 +74,7 @@ export default function OnboardingWizard() {
         <div className="w-full bg-white/10 rounded-full h-1 mb-8">
           <div
             className="bg-brand-indigo h-1 rounded-full transition-all duration-300"
-            style={{ width: `${(state.step / STEPS.length) * 100}%` }}
+            style={{ width: `${Math.min((state.step / (STEPS.length - 1)) * 100, 100)}%` }}
           />
         </div>
 

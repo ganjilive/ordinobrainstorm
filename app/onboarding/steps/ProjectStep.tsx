@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { OnboardingState } from '@/lib/useOnboarding';
+import { toSlug } from '@/lib/utils';
 
 interface Props {
   state: OnboardingState;
@@ -13,12 +14,29 @@ interface Props {
 
 export default function ProjectStep({ state, onNext }: Props) {
   const [projectName, setProjectName] = useState(state.projectName || '');
+  const [projectId, setProjectId] = useState(
+    state.projectId || toSlug(state.projectName || '')
+  );
+  const [isIdEdited, setIsIdEdited] = useState(false);
 
-  const isValid = projectName.trim().length > 0;
+  const isValidId = /^[a-z0-9][a-z0-9-]*$/.test(projectId);
+  const isValid = projectName.trim().length > 0 && isValidId;
+
+  function handleNameChange(value: string) {
+    setProjectName(value);
+    if (!isIdEdited) {
+      setProjectId(toSlug(value));
+    }
+  }
+
+  function handleIdChange(value: string) {
+    setIsIdEdited(true);
+    setProjectId(value);
+  }
 
   function handleSubmit() {
     if (!isValid) return;
-    onNext({ projectName: projectName.trim() });
+    onNext({ projectName: projectName.trim(), projectId });
   }
 
   return (
@@ -43,11 +61,32 @@ export default function ProjectStep({ state, onNext }: Props) {
           type="text"
           placeholder="e.g. Mobile App"
           value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
+          onChange={(e) => handleNameChange(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           className="bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
           autoFocus
         />
+      </div>
+
+      <div className="space-y-1.5 mt-4">
+        <Label htmlFor="project-id" className="text-zinc-300">
+          Project ID
+        </Label>
+        <Input
+          id="project-id"
+          type="text"
+          value={projectId}
+          onChange={(e) => handleIdChange(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+          className="bg-dark-surface border-dark-border text-white font-mono text-sm placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+        />
+        {isIdEdited && !isValidId ? (
+          <p className="text-xs text-red-400">
+            Only lowercase letters, numbers, and hyphens. Must start with a letter or number.
+          </p>
+        ) : (
+          <p className="text-xs text-zinc-500">Used in URLs and API references</p>
+        )}
       </div>
 
       <Button
