@@ -58,7 +58,7 @@ export function useOnboarding() {
 
   const nextStep = useCallback((partial?: Partial<OnboardingState>) => {
     setState((prev) => {
-      if (prev.step >= 7) return prev;
+      if (prev.step >= 8) return prev;
       const next = { ...prev, ...partial, step: prev.step + 1 };
       writeToStorage(next);
       return next;
