@@ -9,7 +9,9 @@ export type OnboardingState = {
   tools: string[];     // e.g. ["Cursor", "Claude Code"]
   goals: string[];
   workspaceName: string;
+  workspaceId: string;
   projectName: string;
+  projectId: string;
 };
 
 const STORAGE_KEY = 'ordino_onboarding';
@@ -23,7 +25,9 @@ const DEFAULT_STATE: OnboardingState = {
   tools: [],
   goals: [],
   workspaceName: '',
+  workspaceId: '',
   projectName: '',
+  projectId: '',
 };
 
 function readFromStorage(): Partial<OnboardingState> {
