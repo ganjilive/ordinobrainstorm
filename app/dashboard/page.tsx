@@ -134,13 +134,13 @@ const NEXT_ACTION_IDS = NEXT_ACTIONS.map((a) => a.id);
 export default function DashboardPage() {
   const router = useRouter();
   const { state: onboardingState, reset } = useOnboarding();
-  const { name, username, workspaceName, workspaceId, projectName } = onboardingState;
+  const { name, username, workspaceName, workspaceId, projectName, projectId } = onboardingState;
   const [inviteEmail, setInviteEmail] = useState('');
   const { completed, toggle, markAllComplete, allDone } = useSetupProgress(NEXT_ACTION_IDS);
 
   const displayName = name || username || 'User';
   const displayInitial = displayName[0].toUpperCase();
-  const workspaceInitials = (workspaceName || 'WS').slice(0, 2).toUpperCase();
+  const projectInitials = (projectName || 'PR').slice(0, 2).toUpperCase();
 
   return (
     <div className="min-h-screen bg-dark-base flex flex-col font-sans">
@@ -209,14 +209,14 @@ export default function DashboardPage() {
           <div className="p-3 border-b border-dark-border">
             <button className="w-full flex items-center gap-2.5 p-2 rounded-lg hover:bg-white/5 transition-colors text-left cursor-pointer">
               <div className="w-7 h-7 rounded-md bg-brand-indigo flex items-center justify-center text-white text-xs font-bold shrink-0">
-                {workspaceInitials}
+                {projectInitials}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">
-                  {workspaceName || 'My Workspace'}
+                  {projectName || 'My Project'}
                 </p>
                 <p className="text-xs text-zinc-500 truncate font-mono">
-                  {workspaceId || 'my-workspace'}
+                  {projectId || 'my-project'}
                 </p>
               </div>
               <ChevronsUpDown size={14} className="text-zinc-500 shrink-0" />
