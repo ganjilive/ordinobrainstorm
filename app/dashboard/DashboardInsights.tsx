@@ -180,6 +180,79 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
         </div>
       </div>
 
+      {/* Failing + Flaky tests */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Top Failing Tests */}
+        <div
+          className="rounded-xl border border-red-900/40 p-4 flex flex-col gap-3"
+          style={{ background: 'rgba(239,68,68,0.04)' }}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-widest text-red-500 font-medium">
+              Top Failing Tests
+            </span>
+            <span className="text-[10px] text-zinc-500">Last 7 days</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {FAILING_TESTS.map((test) => (
+              <div
+                key={test.name}
+                className="rounded-lg border border-dark-border p-3 flex flex-col gap-1"
+                style={{ background: 'rgba(255,255,255,0.024)' }}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-mono text-white truncate">{test.name}</span>
+                  <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
+                    {test.count}×
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-500">
+                  Run {test.runs.join(', ')} · {test.lastFailed}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Flaky Tests */}
+        <div
+          className="rounded-xl border border-amber-900/40 p-4 flex flex-col gap-3"
+          style={{ background: 'rgba(245,158,11,0.04)' }}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] uppercase tracking-widest text-amber-400 font-medium">
+              Flaky Tests
+            </span>
+            <span className="text-[10px] text-zinc-500">Last 10 runs</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {FLAKY_TESTS.map((test) => (
+              <div
+                key={test.name}
+                className="rounded-lg border border-dark-border p-3 flex flex-col gap-2"
+                style={{ background: 'rgba(255,255,255,0.024)' }}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-mono text-white truncate">{test.name}</span>
+                  <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black">
+                    {test.rate}% flaky
+                  </span>
+                </div>
+                <div className="flex gap-0.5">
+                  {test.pattern.map((pass, i) => (
+                    <span
+                      key={i}
+                      className="w-3 h-2 rounded-sm shrink-0"
+                      style={{ background: pass ? '#22c55e' : '#ef4444' }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Existing stat tiles */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {STATS.map(({ id, icon: Icon, label, value, sub, color }) => (
