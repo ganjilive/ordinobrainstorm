@@ -251,6 +251,31 @@ export default function DashboardPage() {
             ))}
           </nav>
 
+          {/* Connector App download card */}
+          <div className="p-3 border-t border-dark-border">
+            <div
+              className="rounded-xl border border-dark-border p-3 flex flex-col gap-2.5"
+              style={{ background: 'rgba(255,255,255,0.024)' }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-brand-indigo/15 text-brand-indigo shrink-0">
+                  <Download size={13} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-white leading-tight">Connector App</p>
+                  <p className="text-[10px] text-zinc-500 leading-tight mt-0.5">Link your local environment</p>
+                </div>
+              </div>
+              <a
+                href="#download"
+                className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg bg-brand-indigo/10 hover:bg-brand-indigo/20 border border-brand-indigo/20 text-brand-indigo text-xs font-medium transition-colors"
+              >
+                <Download size={11} />
+                Download
+              </a>
+            </div>
+          </div>
+
           {/* Footer */}
           <div className="p-3 border-t border-dark-border">
             <button
