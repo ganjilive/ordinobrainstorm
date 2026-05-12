@@ -164,7 +164,7 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
             Insights
             <span className="text-zinc-500 font-normal text-sm ml-2">· {displayName}</span>
           </h2>
-          <p className="text-sm text-zinc-500 mt-0.5">Your workspace at a glance</p>
+          <p className="text-sm text-zinc-500 mt-0.5">Your project at a glance</p>
         </div>
       </div>
 
