@@ -134,7 +134,7 @@ const NEXT_ACTION_IDS = NEXT_ACTIONS.map((a) => a.id);
 export default function DashboardPage() {
   const router = useRouter();
   const { state: onboardingState, reset } = useOnboarding();
-  const { name, username, workspaceName, workspaceId } = onboardingState;
+  const { name, username, workspaceName, workspaceId, projectName } = onboardingState;
   const [inviteEmail, setInviteEmail] = useState('');
   const { completed, toggle, markAllComplete, allDone } = useSetupProgress(NEXT_ACTION_IDS);
 
@@ -421,7 +421,7 @@ export default function DashboardPage() {
             )}
 
             {/* Insights — always rendered; leads the page once setup is done */}
-            <DashboardInsights />
+            <DashboardInsights projectName={projectName} />
 
             {/* Resources */}
             <section>
