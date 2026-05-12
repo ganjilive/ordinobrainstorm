@@ -10,9 +10,6 @@ import {
   Gauge,
 } from 'lucide-react';
 import {
-  PieChart,
-  Pie,
-  Cell,
   AreaChart,
   Area,
   BarChart,
@@ -91,11 +88,6 @@ const PROJECT_STATS = [
 ] as const;
 
 // ─── Chart data ───────────────────────────────────────────────────────────────
-
-const COVERAGE_SLICES = [
-  { label: 'Automated', value: 142, color: '#6366f1' },
-  { label: 'Manual', value: 70, color: '#f59e0b' },
-];
 
 const FAILING_TESTS = [
   { name: 'checkout-flow › payment-step', count: 6, runs: ['#38', '#37', '#35'], lastFailed: '2h ago' },
@@ -293,96 +285,41 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
         ))}
       </div>
 
-      {/* Charts row 1: Pie + Trend */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {/* Automation Coverage Pie */}
-        <div
-          className="rounded-xl border border-dark-border p-4"
-          style={{ background: 'rgba(255,255,255,0.024)' }}
-        >
-          <p className="text-xs uppercase tracking-widest text-zinc-600 font-medium mb-4">
-            Automation Coverage
-          </p>
-          <div className="flex items-center gap-6">
-            <div className="shrink-0">
-              <PieChart width={120} height={120}>
-                <Pie
-                  data={COVERAGE_SLICES}
-                  cx={55}
-                  cy={55}
-                  innerRadius={36}
-                  outerRadius={55}
-                  dataKey="value"
-                  strokeWidth={0}
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  {COVERAGE_SLICES.map((slice) => (
-                    <Cell key={slice.label} fill={slice.color} />
-                  ))}
-                </Pie>
-                <Tooltip {...TOOLTIP_STYLE} />
-              </PieChart>
-            </div>
-            <div className="flex flex-col gap-3 flex-1">
-              <div className="text-center -ml-6 -mt-2">
-                <p className="text-2xl font-bold text-white">67%</p>
-                <p className="text-[10px] text-zinc-500 mt-0.5">automated</p>
-              </div>
-              <div className="space-y-2">
-                {COVERAGE_SLICES.map((slice) => (
-                  <div key={slice.label} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ background: slice.color }}
-                      />
-                      <span className="text-xs text-zinc-400">{slice.label}</span>
-                    </div>
-                    <span className="text-xs font-medium text-white">{slice.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Coverage Trend */}
-        <div
-          className="rounded-xl border border-dark-border p-4"
-          style={{ background: 'rgba(255,255,255,0.024)' }}
-        >
-          <p className="text-xs uppercase tracking-widest text-zinc-600 font-medium mb-4">
-            Coverage Trend
-          </p>
-          <ResponsiveContainer width="100%" height={100}>
-            <AreaChart data={COVERAGE_TREND} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-              <defs>
-                <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
-              <XAxis dataKey="period" {...AXIS_PROPS} />
-              <YAxis domain={[30, 80]} unit="%" {...AXIS_PROPS} />
-              <Tooltip
-                {...TOOLTIP_STYLE}
-                formatter={(v) => [`${v}%`, 'Coverage']}
-              />
-              <Area
-                type="monotone"
-                dataKey="pct"
-                stroke="#6366f1"
-                strokeWidth={2}
-                fill="url(#trendGrad)"
-                dot={{ fill: '#6366f1', r: 3, strokeWidth: 0 }}
-                activeDot={{ r: 4, fill: '#6366f1' }}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-          <p className="text-[10px] text-zinc-600 mt-2">bi-weekly · last 3 months</p>
-        </div>
+      {/* Coverage Trend */}
+      <div
+        className="rounded-xl border border-dark-border p-4"
+        style={{ background: 'rgba(255,255,255,0.024)' }}
+      >
+        <p className="text-xs uppercase tracking-widest text-zinc-600 font-medium mb-4">
+          Coverage Trend
+        </p>
+        <ResponsiveContainer width="100%" height={100}>
+          <AreaChart data={COVERAGE_TREND} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+            <defs>
+              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
+            <XAxis dataKey="period" {...AXIS_PROPS} />
+            <YAxis domain={[30, 80]} unit="%" {...AXIS_PROPS} />
+            <Tooltip
+              {...TOOLTIP_STYLE}
+              formatter={(v) => [`${v}%`, 'Coverage']}
+            />
+            <Area
+              type="monotone"
+              dataKey="pct"
+              stroke="#6366f1"
+              strokeWidth={2}
+              fill="url(#trendGrad)"
+              dot={{ fill: '#6366f1', r: 3, strokeWidth: 0 }}
+              activeDot={{ r: 4, fill: '#6366f1' }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+        <p className="text-[10px] text-zinc-600 mt-2">bi-weekly · last 3 months</p>
       </div>
 
       {/* Last 10 test runs bar chart */}
