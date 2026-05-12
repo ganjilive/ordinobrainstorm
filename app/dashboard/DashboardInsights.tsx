@@ -241,7 +241,7 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
                 <div className="flex gap-0.5">
                   {test.pattern.map((pass, i) => (
                     <span
-                      key={i}
+                      key={`sq-${i}`}
                       className="w-3 h-2 rounded-sm shrink-0"
                       style={{ background: pass ? '#22c55e' : '#ef4444' }}
                     />
