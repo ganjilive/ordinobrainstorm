@@ -97,6 +97,18 @@ const COVERAGE_SLICES = [
   { label: 'Manual', value: 70, color: '#f59e0b' },
 ];
 
+const FAILING_TESTS = [
+  { name: 'checkout-flow › payment-step', count: 6, runs: ['#38', '#37', '#35'], lastFailed: '2h ago' },
+  { name: 'login › sso-redirect',         count: 4, runs: ['#40', '#39'],         lastFailed: '5h ago' },
+  { name: 'cart › discount-apply',         count: 3, runs: ['#36', '#35'],         lastFailed: '1d ago' },
+] as const;
+
+const FLAKY_TESTS = [
+  { name: 'api › rate-limit-retry',       rate: 40, pattern: [true,false,true,false,true,true,false,true,false,true] },
+  { name: 'search › autocomplete-timing', rate: 30, pattern: [true,true,false,true,true,true,false,true,true,false] },
+  { name: 'checkout › promo-code-apply',  rate: 20, pattern: [true,true,true,false,true,true,true,true,false,true] },
+] as const;
+
 const COVERAGE_TREND = [
   { period: 'Mar 17', pct: 44 },
   { period: 'Mar 31', pct: 48 },
