@@ -236,10 +236,7 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
                     <Cell key={slice.label} fill={slice.color} />
                   ))}
                 </Pie>
-                <Tooltip
-                  {...TOOLTIP_STYLE}
-                  formatter={(value: number, name: string) => [value, name]}
-                />
+                <Tooltip {...TOOLTIP_STYLE} />
               </PieChart>
             </div>
             <div className="flex flex-col gap-3 flex-1">
@@ -286,7 +283,7 @@ export function DashboardInsights({ projectName }: DashboardInsightsProps) {
               <YAxis domain={[30, 80]} unit="%" {...AXIS_PROPS} />
               <Tooltip
                 {...TOOLTIP_STYLE}
-                formatter={(v: number) => [`${v}%`, 'Coverage']}
+                formatter={(v) => [`${v}%`, 'Coverage']}
               />
               <Area
                 type="monotone"
