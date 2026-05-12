@@ -15,6 +15,7 @@ export type OnboardingState = {
 };
 
 const STORAGE_KEY = 'ordino_onboarding';
+const SETUP_PROGRESS_KEY = 'ordino_setup_progress';
 
 const DEFAULT_STATE: OnboardingState = {
   step: 0,
@@ -68,6 +69,7 @@ export function useOnboarding() {
   const reset = useCallback(() => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(SETUP_PROGRESS_KEY);
     }
     setState(DEFAULT_STATE);
   }, []);
