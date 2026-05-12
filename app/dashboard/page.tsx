@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOnboarding } from '@/lib/useOnboarding';
+import { useSetupProgress } from '@/lib/useSetupProgress';
+import { DashboardInsights } from './DashboardInsights';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -25,6 +27,7 @@ import {
   Workflow,
   ListChecks,
   Globe,
+  Check,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -126,11 +129,14 @@ const QUICK_LINKS = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+const NEXT_ACTION_IDS = NEXT_ACTIONS.map((a) => a.id);
+
 export default function DashboardPage() {
   const router = useRouter();
   const { state: onboardingState, reset } = useOnboarding();
   const { name, username, workspaceName, workspaceId } = onboardingState;
   const [inviteEmail, setInviteEmail] = useState('');
+  const { completed, toggle, markAllComplete, allDone } = useSetupProgress(NEXT_ACTION_IDS);
 
   const displayName = name || username || 'User';
   const displayInitial = displayName[0].toUpperCase();
@@ -262,101 +268,160 @@ export default function DashboardPage() {
         {/* ── Main content ────────────────────────────────────────────────── */}
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-8 py-10 space-y-10 step-enter">
-            {/* Connector App banner */}
-            <section
-              className="rounded-xl border border-brand-indigo/30 p-5 flex items-center justify-between gap-4"
-              style={{ background: 'rgba(99,102,241,0.08)' }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-indigo/20 text-brand-indigo shrink-0">
-                  <Download size={18} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Download the Connector App</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">
-                    Connect your local environment to Ordino AI and start running automated tests.
-                  </p>
-                </div>
-              </div>
-              <a
-                href="#download"
-                className={cn(
-                  buttonVariants(),
-                  'shrink-0 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-sm',
-                )}
-              >
-                Download <ArrowRight size={14} className="ml-1" />
-              </a>
-            </section>
 
-            {/* Get started */}
-            <section>
-              <div className="flex items-baseline justify-between mb-5">
-                <div>
-                  <h2 className="text-lg font-semibold text-white">Get started</h2>
-                  <p className="text-sm text-zinc-500 mt-0.5">
-                    Complete these steps to set up your first automated test.
-                  </p>
-                </div>
-                <span className="text-xs text-zinc-600 tabular-nums shrink-0">
-                  {NEXT_ACTIONS.length} steps
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {NEXT_ACTIONS.map(({ id, icon: Icon, step, title, description, cta, href }) => (
-                  <div
-                    key={id}
-                    className="relative rounded-xl border border-dark-border hover:border-brand-indigo/30 p-5 transition-all duration-200 flex flex-col"
-                    style={{ background: 'rgba(255,255,255,0.024)' }}
-                  >
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 text-zinc-400">
-                        <Icon size={16} />
-                      </div>
-                      <span className="text-xs text-zinc-600 font-mono">0{step}</span>
+            {!allDone && (
+              <>
+                {/* Connector App banner */}
+                <section
+                  className="rounded-xl border border-brand-indigo/30 p-5 flex items-center justify-between gap-4"
+                  style={{ background: 'rgba(99,102,241,0.08)' }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-indigo/20 text-brand-indigo shrink-0">
+                      <Download size={18} />
                     </div>
-
-                    <p className="text-sm font-medium text-white leading-snug mb-1">{title}</p>
-                    <p className="text-xs text-zinc-500 leading-relaxed flex-1">{description}</p>
-
-                    <a
-                      href={href}
-                      className="inline-flex items-center gap-1 mt-4 text-xs text-brand-indigo hover:text-brand-indigo/80 transition-colors"
-                    >
-                      {cta}
-                      <ArrowRight size={12} />
-                    </a>
+                    <div>
+                      <p className="text-sm font-semibold text-white">Download the Connector App</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        Connect your local environment to Ordino AI and start running automated tests.
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </section>
+                  <a
+                    href="#download"
+                    className={cn(
+                      buttonVariants(),
+                      'shrink-0 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-sm',
+                    )}
+                  >
+                    Download <ArrowRight size={14} className="ml-1" />
+                  </a>
+                </section>
 
-            {/* Invite teammates */}
-            <section
-              className="rounded-xl border border-dark-border p-6"
-              style={{ background: 'rgba(255,255,255,0.024)' }}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <Mail size={16} className="text-zinc-400" />
-                <h2 className="text-base font-semibold text-white">Invite your team</h2>
-              </div>
-              <p className="text-sm text-zinc-500 mb-4">
-                Bring your teammates into the workspace to collaborate on test automation.
-              </p>
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="colleague@company.com"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
-                />
-                <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
-                  Send invite
-                </Button>
-              </div>
-            </section>
+                {/* Get started */}
+                <section>
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <h2 className="text-lg font-semibold text-white">Get started</h2>
+                      <p className="text-sm text-zinc-500 mt-0.5">
+                        Complete these steps to set up your first automated test.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="text-xs text-zinc-600 tabular-nums">
+                        {completed.size}/{NEXT_ACTIONS.length} done
+                      </span>
+                      <button
+                        onClick={markAllComplete}
+                        className="text-xs text-brand-indigo hover:text-brand-indigo/80 transition-colors cursor-pointer"
+                      >
+                        Mark all complete
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {NEXT_ACTIONS.map(({ id, icon: Icon, step, title, description, cta, href }) => {
+                      const isDone = completed.has(id);
+                      return (
+                        <div
+                          key={id}
+                          className={cn(
+                            'relative rounded-xl border p-5 transition-all duration-200 flex flex-col',
+                            isDone
+                              ? 'border-brand-indigo/40'
+                              : 'border-dark-border hover:border-brand-indigo/30',
+                          )}
+                          style={{ background: 'rgba(255,255,255,0.024)' }}
+                        >
+                          {/* Checkbox */}
+                          <button
+                            onClick={() => toggle(id)}
+                            className={cn(
+                              'absolute top-3 right-3 w-5 h-5 rounded flex items-center justify-center transition-colors cursor-pointer',
+                              isDone
+                                ? 'bg-brand-indigo text-white'
+                                : 'border border-zinc-700 text-transparent hover:border-brand-indigo/60',
+                            )}
+                            aria-label={isDone ? 'Mark incomplete' : 'Mark complete'}
+                          >
+                            <Check size={11} strokeWidth={3} />
+                          </button>
+
+                          <div className="flex items-center gap-2.5 mb-3">
+                            <div
+                              className={cn(
+                                'flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 transition-colors',
+                                isDone ? 'text-brand-indigo' : 'text-zinc-400',
+                              )}
+                            >
+                              <Icon size={16} />
+                            </div>
+                            <span
+                              className={cn(
+                                'text-xs font-mono transition-colors',
+                                isDone ? 'text-brand-indigo/60' : 'text-zinc-600',
+                              )}
+                            >
+                              0{step}
+                            </span>
+                          </div>
+
+                          <p
+                            className={cn(
+                              'text-sm font-medium leading-snug mb-1 transition-colors',
+                              isDone ? 'text-zinc-400' : 'text-white',
+                            )}
+                          >
+                            {title}
+                          </p>
+                          <p className="text-xs text-zinc-500 leading-relaxed flex-1">
+                            {description}
+                          </p>
+
+                          <a
+                            href={href}
+                            className="inline-flex items-center gap-1 mt-4 text-xs text-brand-indigo hover:text-brand-indigo/80 transition-colors"
+                          >
+                            {cta}
+                            <ArrowRight size={12} />
+                          </a>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* Invite teammates */}
+                <section
+                  className="rounded-xl border border-dark-border p-6"
+                  style={{ background: 'rgba(255,255,255,0.024)' }}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <Mail size={16} className="text-zinc-400" />
+                    <h2 className="text-base font-semibold text-white">Invite your team</h2>
+                  </div>
+                  <p className="text-sm text-zinc-500 mb-4">
+                    Bring your teammates into the workspace to collaborate on test automation.
+                  </p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="email"
+                      placeholder="colleague@company.com"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+                    />
+                    <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
+                      Send invite
+                    </Button>
+                  </div>
+                </section>
+              </>
+            )}
+
+            {/* Insights — always rendered; leads the page once setup is done */}
+            <DashboardInsights />
 
             {/* Resources */}
             <section>
