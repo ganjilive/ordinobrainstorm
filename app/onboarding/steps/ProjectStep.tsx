@@ -39,9 +39,22 @@ export default function ProjectStep({ state, onNext }: Props) {
     onNext({ projectName: projectName.trim(), projectId });
   }
 
+  function fillDummy() {
+    handleNameChange('Mobile App');
+  }
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-2">Create your first Project</h2>
+      <div className="flex items-start justify-between mb-2">
+        <h2 className="text-2xl font-bold text-white">Create your first Project</h2>
+        <button
+          type="button"
+          onClick={fillDummy}
+          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer shrink-0 mt-1"
+        >
+          Fill sample data
+        </button>
+      </div>
       <p className="text-zinc-400 text-sm leading-relaxed mb-6">
         A Project in Ordino AI is similar to a Product or Product Area in your company — a focused
         space for a specific area of work.

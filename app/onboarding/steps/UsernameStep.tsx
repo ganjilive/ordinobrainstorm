@@ -22,9 +22,22 @@ export default function UsernameStep({ state, onNext }: Props) {
     onNext({ username });
   }
 
+  function fillDummy() {
+    setUsername('alexj');
+  }
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-2">Choose your username</h2>
+      <div className="flex items-start justify-between mb-2">
+        <h2 className="text-2xl font-bold text-white">Choose your username</h2>
+        <button
+          type="button"
+          onClick={fillDummy}
+          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer shrink-0 mt-1"
+        >
+          Fill sample data
+        </button>
+      </div>
       <p className="text-zinc-400 text-sm leading-relaxed mb-6">
         This is how teammates will identify you in Ordino AI.
       </p>

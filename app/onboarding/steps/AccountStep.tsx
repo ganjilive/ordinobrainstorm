@@ -29,9 +29,24 @@ export default function AccountStep({ state, onNext }: Props) {
     onNext({ name: name.trim(), email: email.trim() });
   }
 
+  function fillDummy() {
+    setName('Alex Johnson');
+    setEmail('alex@acme.com');
+    setPassword('Demo@1234');
+  }
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-2">Create your account</h2>
+      <div className="flex items-start justify-between mb-2">
+        <h2 className="text-2xl font-bold text-white">Create your account</h2>
+        <button
+          type="button"
+          onClick={fillDummy}
+          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer shrink-0 mt-1"
+        >
+          Fill sample data
+        </button>
+      </div>
 
       <div className="space-y-4 mt-6">
         <div className="space-y-1.5">

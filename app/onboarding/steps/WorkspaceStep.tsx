@@ -39,9 +39,22 @@ export default function WorkspaceStep({ state, onNext }: Props) {
     onNext({ workspaceName: workspaceName.trim(), workspaceId });
   }
 
+  function fillDummy() {
+    handleNameChange('Acme Corp');
+  }
+
   return (
     <div>
-      <h2 className="text-2xl font-bold text-white mb-2">Create your Workspace</h2>
+      <div className="flex items-start justify-between mb-2">
+        <h2 className="text-2xl font-bold text-white">Create your Workspace</h2>
+        <button
+          type="button"
+          onClick={fillDummy}
+          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer shrink-0 mt-1"
+        >
+          Fill sample data
+        </button>
+      </div>
       <p className="text-zinc-400 text-sm leading-relaxed mb-6">
         In Ordino AI, work happens in a Workspace. Think of it like your company — a shared space
         where your team collaborates on testing and quality.
