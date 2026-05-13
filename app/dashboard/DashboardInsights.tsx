@@ -220,7 +220,7 @@ export function DashboardInsights(_: DashboardInsightsProps) {
             {/* 2×2 stats */}
             <div className="grid grid-cols-2 gap-x-4 gap-y-3">
               <StatMini label="Total Test Cases" value={project.totalTestCases} />
-              <StatMini label="Tests Generated" value={project.testsGenerated} />
+              <StatMini label="Automated Tests" value={project.testsGenerated} />
               <StatMini
                 label="Coverage"
                 value={`${project.coveragePct}%`}
