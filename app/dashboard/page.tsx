@@ -29,6 +29,8 @@ import {
   Globe,
   Check,
   ChevronDown,
+  Sparkles,
+  X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -138,6 +140,8 @@ export default function DashboardPage() {
   const { name, username, workspaceName, workspaceId, projectName, projectId } = onboardingState;
   const [inviteEmail, setInviteEmail] = useState('');
   const [getStartedOpen, setGetStartedOpen] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(true);
   const { completed, toggle, markAllComplete, allDone } = useSetupProgress(NEXT_ACTION_IDS);
 
   const displayName = name || username || 'User';
@@ -296,30 +300,76 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-5xl mx-auto px-8 py-10 space-y-10 step-enter">
 
-            {/* Invite your team — always visible */}
+            {/* Early adopter upgrade banner */}
+            {!bannerDismissed && (
+              <div
+                className="rounded-xl border border-brand-indigo/40 px-5 py-4 flex items-center gap-4"
+                style={{ background: 'rgba(99,102,241,0.08)' }}
+              >
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-indigo/20 text-brand-indigo shrink-0">
+                  <Sparkles size={16} />
+                </div>
+                <p className="flex-1 text-sm text-zinc-300 leading-snug">
+                  <span className="font-semibold text-white">Thank you for joining the early adopter program.</span>{' '}
+                  If you are satisfied with Ordino AI, please upgrade to a pro license.
+                </p>
+                <a
+                  href="#upgrade"
+                  className={cn(
+                    buttonVariants(),
+                    'shrink-0 bg-brand-indigo hover:bg-brand-indigo/90 text-white text-sm',
+                  )}
+                >
+                  Upgrade
+                </a>
+                <button
+                  onClick={() => setBannerDismissed(true)}
+                  className="shrink-0 p-1 rounded text-zinc-500 hover:text-zinc-300 hover:bg-white/5 transition-colors cursor-pointer"
+                  aria-label="Dismiss"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+
+            {/* Invite your team — always visible, collapsible */}
             <section
-              className="rounded-xl border border-dark-border p-6"
+              className="rounded-xl border border-dark-border"
               style={{ background: 'rgba(255,255,255,0.024)' }}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <Mail size={16} className="text-zinc-400" />
-                <h2 className="text-base font-semibold text-white">Invite your team</h2>
-              </div>
-              <p className="text-sm text-zinc-500 mb-4">
-                Bring your teammates into the workspace to collaborate on test automation.
-              </p>
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="colleague@company.com"
-                  value={inviteEmail}
-                  onChange={(e) => setInviteEmail(e.target.value)}
-                  className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+              <button
+                onClick={() => setInviteOpen((o) => !o)}
+                className="w-full flex items-center gap-2 px-6 py-4 text-left group cursor-pointer"
+              >
+                <Mail size={16} className="text-zinc-400 shrink-0" />
+                <h2 className="text-base font-semibold text-white flex-1">Invite your team</h2>
+                <ChevronDown
+                  size={16}
+                  className={cn(
+                    'text-zinc-500 transition-transform duration-200',
+                    inviteOpen && 'rotate-180',
+                  )}
                 />
-                <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
-                  Send invite
-                </Button>
-              </div>
+              </button>
+              {inviteOpen && (
+                <div className="px-6 pb-6">
+                  <p className="text-sm text-zinc-500 mb-4">
+                    Bring your teammates into the workspace to collaborate on test automation.
+                  </p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="email"
+                      placeholder="colleague@company.com"
+                      value={inviteEmail}
+                      onChange={(e) => setInviteEmail(e.target.value)}
+                      className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+                    />
+                    <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
+                      Send invite
+                    </Button>
+                  </div>
+                </div>
+              )}
             </section>
 
             {!allDone && (
