@@ -1,135 +1,86 @@
 'use client';
+import { Clock, AlertCircle } from 'lucide-react';
 import {
-  CheckCircle2,
-  Clock,
-  FolderKanban,
-  Zap,
-  PlayCircle,
-  TestTube2,
-  Bot,
-  Gauge,
-} from 'lucide-react';
-import {
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  Legend,
 } from 'recharts';
 
-// ─── Existing stats ───────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
-const STATS = [
-  {
-    id: 'projects',
-    icon: FolderKanban,
-    label: 'Automation Projects',
-    value: '3',
-    sub: 'active projects',
-    color: 'text-brand-indigo',
-  },
-  {
-    id: 'tests',
-    icon: CheckCircle2,
-    label: 'Tests Generated',
-    value: '142',
-    sub: 'across all runs',
-    color: 'text-white',
-  },
-  {
-    id: 'saved',
-    icon: Clock,
-    label: 'Time Saved',
-    value: '47h',
-    sub: 'vs manual scripting',
-    color: 'text-green-500',
-  },
-  {
-    id: 'pass',
-    icon: Zap,
-    label: 'Pass Rate',
-    value: '94%',
-    sub: 'last 30 days',
-    color: 'text-green-500',
-  },
-] as const;
-
-// ─── New project-scoped stats ─────────────────────────────────────────────────
-
-const PROJECT_STATS = [
-  {
-    id: 'total',
-    icon: TestTube2,
-    label: 'Total Test Cases',
-    value: '212',
-    sub: 'in this project',
-    color: 'text-white',
-  },
-  {
-    id: 'automated',
-    icon: Bot,
-    label: 'Automated Tests',
-    value: '142',
-    sub: 'test cases automated',
-    color: 'text-brand-indigo',
-  },
-  {
-    id: 'coverage',
-    icon: Gauge,
-    label: 'Automation Coverage',
-    value: '67%',
-    sub: 'of test cases automated',
-    color: 'text-amber-400',
-  },
-] as const;
-
-// ─── Chart data ───────────────────────────────────────────────────────────────
-
-const FAILING_TESTS = [
-  { name: 'checkout-flow › payment-step', count: 6, runs: ['#38', '#37', '#35'], lastFailed: '2h ago' },
-  { name: 'login › sso-redirect',         count: 4, runs: ['#40', '#39'],         lastFailed: '5h ago' },
-  { name: 'cart › discount-apply',         count: 3, runs: ['#36', '#35'],         lastFailed: '1d ago' },
-] as const;
-
-const FLAKY_TESTS = [
-  { name: 'api › rate-limit-retry',       rate: 40, pattern: [true,false,true,false,true,true,false,true,false,true] },
-  { name: 'search › autocomplete-timing', rate: 30, pattern: [true,true,false,true,true,true,false,true,true,false] },
-  { name: 'checkout › promo-code-apply',  rate: 20, pattern: [true,true,true,false,true,true,true,true,false,true] },
-] as const;
-
-const COVERAGE_TREND = [
-  { period: 'Mar 17', pct: 44 },
-  { period: 'Mar 31', pct: 48 },
-  { period: 'Apr 14', pct: 52 },
-  { period: 'Apr 28', pct: 58 },
-  { period: 'May 12', pct: 63 },
-  { period: 'May 26', pct: 67 },
-];
-
-const TEST_RUNS = [
-  { run: '#31', passed: 28, failed: 5, flaky: 3, skipped: 2 },
-  { run: '#32', passed: 32, failed: 3, flaky: 2, skipped: 1 },
-  { run: '#33', passed: 30, failed: 4, flaky: 1, skipped: 3 },
-  { run: '#34', passed: 35, failed: 2, flaky: 2, skipped: 1 },
-  { run: '#35', passed: 29, failed: 6, flaky: 4, skipped: 1 },
-  { run: '#36', passed: 33, failed: 3, flaky: 1, skipped: 2 },
-  { run: '#37', passed: 36, failed: 1, flaky: 2, skipped: 1 },
-  { run: '#38', passed: 34, failed: 2, flaky: 3, skipped: 1 },
-  { run: '#39', passed: 37, failed: 1, flaky: 1, skipped: 0 },
-  { run: '#40', passed: 38, failed: 0, flaky: 2, skipped: 0 },
-];
-
-const LATEST_RUN = {
-  name: 'checkout-flow',
-  tests: 38,
-  duration: '4m 12s',
-  status: 'Passed',
-  ago: '2 hrs ago',
+const TIME_SAVED = {
+  hoursSaved: 47,
+  withOrdino: '3h',
+  manual: '50h',
+  projectCount: 3,
+  hint: 'Did you know? Development teams spend approximately 4 hours to automate a single user flow by writing test scripts manually.',
 };
+
+const AUTOMATION_PROJECTS = [
+  {
+    id: 'checkout-flow',
+    name: 'Checkout Flow',
+    totalTestCases: 212,
+    testsGenerated: 142,
+    coveragePct: 67,
+    latestRunFailed: false,
+    qualityHealth: 82,
+    coverageTrend: [
+      { period: 'Mar 17', pct: 44 },
+      { period: 'Mar 31', pct: 48 },
+      { period: 'Apr 14', pct: 52 },
+      { period: 'Apr 28', pct: 58 },
+      { period: 'May 12', pct: 63 },
+      { period: 'May 26', pct: 67 },
+    ],
+  },
+  {
+    id: 'login-auth',
+    name: 'Login & Auth',
+    totalTestCases: 156,
+    testsGenerated: 98,
+    coveragePct: 63,
+    latestRunFailed: true,
+    qualityHealth: 61,
+    coverageTrend: [
+      { period: 'Mar 17', pct: 38 },
+      { period: 'Mar 31', pct: 44 },
+      { period: 'Apr 14', pct: 49 },
+      { period: 'Apr 28', pct: 55 },
+      { period: 'May 12', pct: 59 },
+      { period: 'May 26', pct: 63 },
+    ],
+  },
+  {
+    id: 'cart-orders',
+    name: 'Cart & Orders',
+    totalTestCases: 89,
+    testsGenerated: 42,
+    coveragePct: 47,
+    latestRunFailed: false,
+    qualityHealth: 74,
+    coverageTrend: [
+      { period: 'Mar 17', pct: 28 },
+      { period: 'Mar 31', pct: 33 },
+      { period: 'Apr 14', pct: 37 },
+      { period: 'Apr 28', pct: 41 },
+      { period: 'May 12', pct: 44 },
+      { period: 'May 26', pct: 47 },
+    ],
+  },
+];
+
+const COVERAGE_TRENDS_MERGED = AUTOMATION_PROJECTS[0].coverageTrend.map((_, i) => ({
+  period: AUTOMATION_PROJECTS[0].coverageTrend[i].period,
+  ...Object.fromEntries(AUTOMATION_PROJECTS.map((p) => [p.id, p.coverageTrend[i].pct])),
+}));
+
+const PROJECT_COLORS = ['#6366f1', '#22c55e', '#f59e0b'];
 
 // ─── Shared chart style helpers ───────────────────────────────────────────────
 
@@ -150,235 +101,184 @@ const AXIS_PROPS = {
   tickLine: false as const,
 };
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function healthColor(score: number) {
+  if (score >= 80) return 'text-green-400';
+  if (score >= 50) return 'text-amber-400';
+  return 'text-red-400';
+}
+
+function StatMini({
+  label,
+  value,
+  color = 'text-white',
+}: {
+  label: string;
+  value: string | number;
+  color?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[10px] uppercase tracking-widest text-zinc-600">{label}</span>
+      <span className={`text-xl font-bold leading-none ${color}`}>{value}</span>
+    </div>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface DashboardInsightsProps {
   projectName?: string;
 }
 
-export function DashboardInsights({ projectName }: DashboardInsightsProps) {
-  const displayName = projectName || 'My Project';
-
+export function DashboardInsights(_: DashboardInsightsProps) {
   return (
     <section className="space-y-3">
       {/* Header */}
       <div className="flex items-baseline justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-white">
-            Insights
-            <span className="text-zinc-500 font-normal text-sm ml-2">· {displayName}</span>
-          </h2>
-          <p className="text-sm text-zinc-500 mt-0.5">Your project at a glance</p>
+          <h2 className="text-lg font-semibold text-white">Insights</h2>
+          <p className="text-sm text-zinc-500 mt-0.5">Your automation at a glance</p>
         </div>
       </div>
 
-      {/* Failing + Flaky tests */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {/* Top Failing Tests */}
-        <div
-          className="rounded-xl border border-red-900/40 p-4 flex flex-col gap-3"
-          style={{ background: 'rgba(239,68,68,0.04)' }}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-widest text-red-500 font-medium">
-              Top Failing Tests
+      {/* Time Saved Hero */}
+      <div
+        className="rounded-xl border border-green-900/40 p-5 flex flex-col gap-4"
+        style={{ background: 'rgba(34,197,94,0.04)' }}
+      >
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          {/* Headline */}
+          <div className="flex-1">
+            <span className="text-[10px] uppercase tracking-widest text-green-500/70 font-medium flex items-center gap-1.5">
+              <Clock size={11} />
+              Time Saved with Ordino AI
             </span>
-            <span className="text-[10px] text-zinc-500">Last 7 days</span>
+            <p className="text-4xl font-bold text-green-400 leading-none mt-2">
+              {TIME_SAVED.hoursSaved}h
+            </p>
+            <p className="text-sm text-zinc-500 mt-1">
+              saved across {TIME_SAVED.projectCount} projects
+            </p>
           </div>
-          <div className="flex flex-col gap-2">
-            {FAILING_TESTS.map((test) => (
-              <div
-                key={test.name}
-                className="rounded-lg border border-dark-border p-3 flex flex-col gap-1"
-                style={{ background: 'rgba(255,255,255,0.024)' }}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-mono text-white truncate">{test.name}</span>
-                  <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-red-500 text-white">
-                    {test.count}×
-                  </span>
-                </div>
-                <p className="text-xs text-zinc-500">
-                  Run {test.runs.join(', ')} · {test.lastFailed}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Flaky Tests */}
-        <div
-          className="rounded-xl border border-amber-900/40 p-4 flex flex-col gap-3"
-          style={{ background: 'rgba(245,158,11,0.04)' }}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-widest text-amber-400 font-medium">
-              Flaky Tests
-            </span>
-            <span className="text-[10px] text-zinc-500">Last 10 runs</span>
-          </div>
-          <div className="flex flex-col gap-2">
-            {FLAKY_TESTS.map((test) => (
-              <div
-                key={test.name}
-                className="rounded-lg border border-dark-border p-3 flex flex-col gap-2"
-                style={{ background: 'rgba(255,255,255,0.024)' }}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-mono text-white truncate">{test.name}</span>
-                  <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black">
-                    {test.rate}% flaky
-                  </span>
-                </div>
-                <div className="flex gap-0.5">
-                  {test.pattern.map((pass, i) => (
-                    <span
-                      key={`sq-${i}`}
-                      className="w-3 h-2 rounded-sm shrink-0"
-                      style={{ background: pass ? '#22c55e' : '#ef4444' }}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Existing stat tiles */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {STATS.map(({ id, icon: Icon, label, value, sub, color }) => (
-          <div
-            key={id}
-            className="rounded-xl border border-dark-border p-4 flex flex-col gap-2"
-            style={{ background: 'rgba(255,255,255,0.024)' }}
-          >
-            <div className="flex items-center gap-1.5">
-              <Icon size={13} className="text-zinc-600" />
-              <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-medium">
-                {label}
+          {/* Ordino vs Manual comparison */}
+          <div className="flex items-center gap-3">
+            <div
+              className="flex flex-col items-center px-5 py-3 rounded-lg border border-brand-indigo/30"
+              style={{ background: 'rgba(99,102,241,0.08)' }}
+            >
+              <span className="text-2xl font-bold text-brand-indigo leading-none">
+                {TIME_SAVED.withOrdino}
               </span>
+              <span className="text-[10px] text-zinc-500 mt-1 text-center">With Ordino AI</span>
             </div>
-            <p className={`text-2xl font-bold leading-none ${color}`}>{value}</p>
-            <p className="text-xs text-zinc-600">{sub}</p>
+            <span className="text-zinc-600 text-sm font-medium">vs</span>
+            <div
+              className="flex flex-col items-center px-5 py-3 rounded-lg border border-dark-border"
+              style={{ background: 'rgba(255,255,255,0.024)' }}
+            >
+              <span className="text-2xl font-bold text-zinc-400 leading-none">
+                {TIME_SAVED.manual}
+              </span>
+              <span className="text-[10px] text-zinc-500 mt-1 text-center">Manual scripting</span>
+            </div>
           </div>
-        ))}
+        </div>
+
+        {/* Did you know hint */}
+        <p className="text-xs text-zinc-500 italic border-t border-green-900/20 pt-3">
+          💡 {TIME_SAVED.hint}
+        </p>
       </div>
 
-      {/* Project-scoped stat tiles */}
+      {/* Section label */}
+      <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium pt-1">
+        Automation Projects
+      </p>
+
+      {/* Project cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {PROJECT_STATS.map(({ id, icon: Icon, label, value, sub, color }) => (
+        {AUTOMATION_PROJECTS.map((project) => (
           <div
-            key={id}
-            className="rounded-xl border border-dark-border p-4 flex flex-col gap-2"
+            key={project.id}
+            className="rounded-xl border border-dark-border p-4 flex flex-col gap-3"
             style={{ background: 'rgba(255,255,255,0.024)' }}
           >
-            <div className="flex items-center gap-1.5">
-              <Icon size={13} className="text-zinc-600" />
-              <span className="text-[10px] uppercase tracking-widest text-zinc-600 font-medium">
-                {label}
-              </span>
+            {/* Card header */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-medium text-white truncate">{project.name}</span>
+              {project.latestRunFailed && (
+                <span className="shrink-0 flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+                  <AlertCircle size={10} />
+                  Run Failed
+                </span>
+              )}
             </div>
-            <p className={`text-2xl font-bold leading-none ${color}`}>{value}</p>
-            <p className="text-xs text-zinc-600">{sub}</p>
+
+            {/* 2×2 stats */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+              <StatMini label="Total Test Cases" value={project.totalTestCases} />
+              <StatMini label="Tests Generated" value={project.testsGenerated} />
+              <StatMini
+                label="Coverage"
+                value={`${project.coveragePct}%`}
+                color="text-brand-indigo"
+              />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[10px] uppercase tracking-widest text-zinc-600">
+                  Quality Health
+                </span>
+                <span
+                  className={`text-xl font-bold leading-none ${healthColor(project.qualityHealth)}`}
+                >
+                  {project.qualityHealth}
+                  <span className="text-xs font-normal text-zinc-500">/100</span>
+                </span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Coverage Trend */}
+      {/* Coverage Trends — multi-line */}
       <div
         className="rounded-xl border border-dark-border p-4"
         style={{ background: 'rgba(255,255,255,0.024)' }}
       >
         <p className="text-xs uppercase tracking-widest text-zinc-600 font-medium mb-4">
-          Coverage Trend
+          Coverage Trends
         </p>
-        <ResponsiveContainer width="100%" height={100}>
-          <AreaChart data={COVERAGE_TREND} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-            <defs>
-              <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-              </linearGradient>
-            </defs>
+        <ResponsiveContainer width="100%" height={160}>
+          <LineChart
+            data={COVERAGE_TRENDS_MERGED}
+            margin={{ top: 4, right: 4, left: -24, bottom: 0 }}
+          >
             <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
             <XAxis dataKey="period" {...AXIS_PROPS} />
-            <YAxis domain={[30, 80]} unit="%" {...AXIS_PROPS} />
+            <YAxis domain={[20, 80]} unit="%" {...AXIS_PROPS} />
             <Tooltip
               {...TOOLTIP_STYLE}
-              formatter={(v) => [`${v}%`, 'Coverage']}
+              formatter={(v: unknown) => [`${v}%`]}
             />
-            <Area
-              type="monotone"
-              dataKey="pct"
-              stroke="#6366f1"
-              strokeWidth={2}
-              fill="url(#trendGrad)"
-              dot={{ fill: '#6366f1', r: 3, strokeWidth: 0 }}
-              activeDot={{ r: 4, fill: '#6366f1' }}
+            <Legend
+              wrapperStyle={{ fontSize: 11, paddingTop: 12 }}
             />
-          </AreaChart>
+            {AUTOMATION_PROJECTS.map((project, i) => (
+              <Line
+                key={project.id}
+                dataKey={project.id}
+                name={project.name}
+                stroke={PROJECT_COLORS[i]}
+                strokeWidth={2}
+                dot={{ fill: PROJECT_COLORS[i], r: 3, strokeWidth: 0 }}
+                activeDot={{ r: 4, fill: PROJECT_COLORS[i] }}
+              />
+            ))}
+          </LineChart>
         </ResponsiveContainer>
         <p className="text-[10px] text-zinc-600 mt-2">bi-weekly · last 3 months</p>
-      </div>
-
-      {/* Last 10 test runs bar chart */}
-      <div
-        className="rounded-xl border border-dark-border p-4"
-        style={{ background: 'rgba(255,255,255,0.024)' }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-xs uppercase tracking-widest text-zinc-600 font-medium">
-            Last 10 Test Runs
-          </p>
-          <div className="flex items-center gap-3">
-            {[
-              { label: 'Passed', color: '#22c55e' },
-              { label: 'Failed', color: '#ef4444' },
-              { label: 'Flaky', color: '#f59e0b' },
-              { label: 'Skipped', color: '#3f3f46' },
-            ].map(({ label, color }) => (
-              <div key={label} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-sm shrink-0" style={{ background: color }} />
-                <span className="text-[10px] text-zinc-500">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <ResponsiveContainer width="100%" height={140}>
-          <BarChart data={TEST_RUNS} margin={{ top: 0, right: 4, left: -24, bottom: 0 }} barGap={1}>
-            <CartesianGrid stroke="rgba(255,255,255,0.05)" vertical={false} />
-            <XAxis dataKey="run" {...AXIS_PROPS} />
-            <YAxis {...AXIS_PROPS} />
-            <Tooltip {...TOOLTIP_STYLE} />
-            <Bar dataKey="passed" name="Passed" stackId="a" fill="#22c55e" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="failed" name="Failed" stackId="a" fill="#ef4444" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="flaky" name="Flaky" stackId="a" fill="#f59e0b" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="skipped" name="Skipped" stackId="a" fill="#3f3f46" radius={[2, 2, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Latest run */}
-      <div
-        className="rounded-xl border border-dark-border p-4 flex items-center gap-4"
-        style={{ background: 'rgba(255,255,255,0.024)' }}
-      >
-        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-indigo/15 text-brand-indigo shrink-0">
-          <PlayCircle size={18} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-white">
-            {LATEST_RUN.name}
-            <span className="text-zinc-500 font-normal"> · {LATEST_RUN.tests} tests</span>
-          </p>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            Completed {LATEST_RUN.ago} · {LATEST_RUN.duration}
-          </p>
-        </div>
-        <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-green-500/10 text-green-500 border border-green-500/20 shrink-0">
-          {LATEST_RUN.status}
-        </span>
       </div>
     </section>
   );
