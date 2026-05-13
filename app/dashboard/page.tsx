@@ -296,6 +296,32 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-8 py-10 space-y-10 step-enter">
 
+            {/* Invite your team — always visible */}
+            <section
+              className="rounded-xl border border-dark-border p-6"
+              style={{ background: 'rgba(255,255,255,0.024)' }}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <Mail size={16} className="text-zinc-400" />
+                <h2 className="text-base font-semibold text-white">Invite your team</h2>
+              </div>
+              <p className="text-sm text-zinc-500 mb-4">
+                Bring your teammates into the workspace to collaborate on test automation.
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder="colleague@company.com"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
+                />
+                <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
+                  Send invite
+                </Button>
+              </div>
+            </section>
+
             {!allDone && (
               <>
                 {/* Connector App banner */}
@@ -419,31 +445,6 @@ export default function DashboardPage() {
                   </div>
                 </section>
 
-                {/* Invite teammates */}
-                <section
-                  className="rounded-xl border border-dark-border p-6"
-                  style={{ background: 'rgba(255,255,255,0.024)' }}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Mail size={16} className="text-zinc-400" />
-                    <h2 className="text-base font-semibold text-white">Invite your team</h2>
-                  </div>
-                  <p className="text-sm text-zinc-500 mb-4">
-                    Bring your teammates into the workspace to collaborate on test automation.
-                  </p>
-                  <div className="flex gap-2">
-                    <Input
-                      type="email"
-                      placeholder="colleague@company.com"
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
-                      className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
-                    />
-                    <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
-                      Send invite
-                    </Button>
-                  </div>
-                </section>
               </>
             )}
 
@@ -608,31 +609,6 @@ export default function DashboardPage() {
                       </div>
                     </section>
 
-                    {/* Invite teammates */}
-                    <section
-                      className="rounded-xl border border-dark-border p-6"
-                      style={{ background: 'rgba(255,255,255,0.024)' }}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <Mail size={16} className="text-zinc-400" />
-                        <h2 className="text-base font-semibold text-white">Invite your team</h2>
-                      </div>
-                      <p className="text-sm text-zinc-500 mb-4">
-                        Bring your teammates into the workspace to collaborate on test automation.
-                      </p>
-                      <div className="flex gap-2">
-                        <Input
-                          type="email"
-                          placeholder="colleague@company.com"
-                          value={inviteEmail}
-                          onChange={(e) => setInviteEmail(e.target.value)}
-                          className="flex-1 bg-dark-surface border-dark-border text-white placeholder:text-zinc-600 focus-visible:border-brand-indigo focus-visible:ring-brand-indigo/20"
-                        />
-                        <Button className="bg-brand-indigo hover:bg-brand-indigo/90 text-white shrink-0">
-                          Send invite
-                        </Button>
-                      </div>
-                    </section>
                   </div>
                 )}
               </section>
